@@ -26,7 +26,6 @@ def apply_bg():
         """
         st.markdown(bg_css, unsafe_allow_html=True)
 
-# CSS لضبط التصميم وتثبيت الأزرار
 st.markdown("""
     <style>
     /* إخفاء الهوامش */
@@ -40,56 +39,62 @@ st.markdown("""
     .title-font { font-size: 35px !important; font-weight: bold; text-align: center; color: white; text-shadow: 2px 2px 8px #000000; margin-bottom: 10px;}
     .number-display { font-size: 140px; font-weight: bold; color: white; text-align: center; text-shadow: 3px 3px 12px #000000; margin-top: 20px;}
     
-    /* تثبيت زر التسبيح في أسفل اليمين بشكل إجباري */
+    /* زر التسبيح - مستطيل عمودي (كبسولة) على اليمين */
     button[kind="primary"] {
         position: fixed !important;
-        bottom: 40px !important;
+        bottom: 50px !important;
         right: 20px !important;
-        width: 65vw !important; /* يأخذ 65% من عرض الشاشة */
-        height: 250px !important;
-        font-size: 60px !important;
+        width: 90px !important;  /* العرض قليل */
+        height: 400px !important; /* الطول كبير */
+        font-size: 30px !important;
         font-weight: bold !important;
-        border-radius: 35px !important;
+        border-radius: 50px !important; /* حواف دائرية */
         background: linear-gradient(135deg, #00c6ff, #0072ff) !important;
         color: white !important;
-        border: 4px solid rgba(255,255,255,0.4) !important;
-        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.6) !important;
+        border: 3px solid rgba(255,255,255,0.6) !important;
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.5) !important;
         z-index: 1000 !important;
     }
     button[kind="primary"]:active {
         transform: scale(0.95) !important;
     }
     
-    /* تثبيت زر التصفير في أسفل اليسار */
+    /* زر التصفير - صغير ومربع على اليسار */
     button[kind="secondary"] {
         position: fixed !important;
-        bottom: 40px !important;
+        bottom: 50px !important;
         left: 20px !important;
-        width: 25vw !important;
-        height: 60px !important;
-        font-size: 20px !important;
-        background: rgba(231, 76, 60, 0.8) !important;
+        width: 90px !important;
+        height: 90px !important;
+        font-size: 22px !important;
+        background: rgba(231, 76, 60, 0.9) !important;
         color: white !important;
         border: 2px solid white !important;
-        border-radius: 15px !important;
+        border-radius: 20px !important;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5) !important;
         z-index: 1000 !important;
     }
 
-    /* شفافية وترتيب باقي العناصر */
+    /* إصلاح قائمة اختيار الصورة (الخط أسود مقروء على خلفية فاتحة) */
     div[data-testid="stExpander"] {
-        background-color: rgba(0, 0, 0, 0.3) !important;
-        border: none !important;
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        border-radius: 15px !important;
+        margin-top: 40px !important;
+        border: 1px solid #ccc !important;
         position: relative;
         z-index: 500;
     }
-    div[data-testid="stExpander"] * { color: white !important; }
+    div[data-testid="stExpander"] * { 
+        color: black !important; /* الخط باللون الأسود */
+    }
     
+    /* القائمة المنسدلة للأذكار */
     .stSelectbox {
         position: relative;
         z-index: 500;
     }
     .stSelectbox > div > div {
-        background-color: rgba(0, 0, 0, 0.5) !important;
+        background-color: rgba(0, 0, 0, 0.6) !important;
         color: white !important;
         border: none !important;
     }
@@ -100,7 +105,7 @@ st.markdown('<p class="title-font">📿 السبحة الإلكترونية</p>'
 zikr_option = st.selectbox("", ["سبحان الله", "الحمد لله", "لا إله إلا الله", "الله أكبر", "أستغفر الله", "اللهم صل على محمد وآل محمد"], label_visibility="collapsed")
 st.markdown(f'<div class="number-display">{st.session_state.tasbeeh_count}</div>', unsafe_allow_html=True)
 
-# أزرار بدون ترتيب أعمدة (سيتم وضعها حسب إحداثيات الـ CSS أعلاه)
+# أزرار التسبيح والتصفير
 if st.button("سبّح", type="primary"):
     st.session_state.tasbeeh_count += 1
     st.rerun()
@@ -109,11 +114,12 @@ if st.button("تصفير", type="secondary"):
     st.session_state.tasbeeh_count = 0
     st.rerun()
 
-# الإعدادات لرفع الصورة
+# الإعدادات لرفع الصورة (الآن بخط أسود)
 with st.expander("⚙️ لتغيير الصورة الخلفية اضغط هنا"):
     uploaded_file = st.file_uploader("اختر صورة من تلفونك:", type=['png', 'jpg', 'jpeg'])
     if uploaded_file is not None:
         st.session_state.bg_image = base64.b64encode(uploaded_file.getvalue()).decode()
         st.rerun()
 
+# تطبيق الخلفية
 apply_bg()
