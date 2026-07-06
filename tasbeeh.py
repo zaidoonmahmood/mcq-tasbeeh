@@ -1,8 +1,8 @@
 import streamlit as st
 import base64
 
-# إعدادات الصفحة
-st.set_page_config(page_title="السبحة الإلكترونية", page_icon="📿", layout="centered")
+# إعدادات الصفحة - وضع الشاشة الكاملة
+st.set_page_config(page_title="السبحة الإلكترونية", page_icon="📿", layout="wide", initial_sidebar_state="collapsed")
 
 # الذاكرة لحفظ العداد
 if 'tasbeeh_count' not in st.session_state:
@@ -20,55 +20,74 @@ def add_bg_from_upload(uploaded_file):
             background-position: center;
             background-attachment: fixed;
         }}
-        /* إضافة طبقة شفافة فوق الخلفية حتى تبين الكتابة واضحة */
-        .stApp > header {{
-            background-color: transparent;
-        }}
-        .block-container {{
-            background-color: rgba(255, 255, 255, 0.85);
-            padding: 2rem;
-            border-radius: 20px;
-            margin-top: 20px;
-        }}
         </style>
         """
         st.markdown(bg_css, unsafe_allow_html=True)
 
-# تصميم الواجهة والأزرار
+# تصميم الواجهة وإلغاء الهوامش
 st.markdown("""
     <style>
-    .title-font { font-size: 40px !important; font-weight: bold; text-align: center; color: #1f618d; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); margin-bottom: 0px;}
-    .number-display { font-size: 90px; font-weight: bold; color: #145a32; text-align: center; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); margin: 10px 0px;}
+    /* إخفاء الهوامش بالكامل لملء الشاشة */
+    .appview-container .main .block-container {
+        padding-top: 50px !important; /* مسافة للـ Dynamic Island بالآيفون */
+        padding-bottom: 0px !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        max-width: 100%;
+        background-color: transparent !important; /* إزالة اللون الأبيض نهائياً لبروز الخلفية */
+    }
     
-    /* تكبير الزر الرئيسي للسبحة وجعله بارز */
-    div.stButton > button {
-        height: 200px;
+    header {display: none !important;} /* إخفاء الشريط العلوي */
+    footer {display: none !important;} /* إخفاء الشريط السفلي */
+    
+    /* نصوص بخلفية ظل سوداء حتى تنقرئ على أي صورة واضحة */
+    .title-font { font-size: 35px !important; font-weight: bold; text-align: center; color: white; text-shadow: 2px 2px 8px #000000; margin-bottom: 10px;}
+    .number-display { font-size: 130px; font-weight: bold; color: white; text-align: center; text-shadow: 3px 3px 12px #000000; margin: 10px 0px;}
+    
+    /* زر التسبيح (يمين، لون سمائي) */
+    div[data-testid="stHorizontalBlock"]:nth-of-type(1) div[data-testid="column"]:nth-of-type(2) div.stButton > button {
+        height: 320px; /* دگمة عملاقة ومريحة */
         width: 100%;
-        font-size: 50px !important;
+        font-size: 70px !important;
         font-weight: bold;
-        border-radius: 25px;
-        background: linear-gradient(135deg, #27ae60, #2ecc71);
+        border-radius: 40px;
+        background: linear-gradient(135deg, #00c6ff, #0072ff); /* سمائي وأزرق */
         color: white;
-        border: 3px solid #1e8449;
-        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.2);
-        transition: all 0.2s ease-in-out;
+        border: 4px solid rgba(255,255,255,0.5);
+        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.6);
+        transition: all 0.1s ease-in-out;
     }
-    
-    /* تأثير عند الضغط على الزر الكبير */
-    div.stButton > button:active {
+    div[data-testid="stHorizontalBlock"]:nth-of-type(1) div[data-testid="column"]:nth-of-type(2) div.stButton > button:active {
         transform: scale(0.95);
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-        background: linear-gradient(135deg, #1e8449, #27ae60);
+        background: linear-gradient(135deg, #0072ff, #00c6ff);
     }
     
-    /* تخصيص زر التصفير ليكون أصغر ولونه مختلف */
-    div[data-testid="column"]:nth-of-type(2) div.stButton > button {
-        height: 60px;
-        font-size: 22px !important;
-        background: linear-gradient(135deg, #e74c3c, #c0392b);
-        border: none;
-        border-radius: 10px;
-        box-shadow: none;
+    /* تخصيص زر التصفير (يسار) */
+    div[data-testid="stHorizontalBlock"]:nth-of-type(2) div[data-testid="column"]:nth-of-type(1) div.stButton > button {
+        height: 50px;
+        font-size: 20px !important;
+        background: rgba(231, 76, 60, 0.9);
+        color: white;
+        border: 2px solid white;
+        border-radius: 15px;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    /* تقليل وضوح مكان رفع الصورة (إخفاءه بأسفل الشاشة) */
+    div[data-testid="stExpander"] {
+        background-color: rgba(0, 0, 0, 0.1) !important;
+        border: none !important;
+        margin-top: 40px;
+    }
+    div[data-testid="stExpander"] * {
+        color: rgba(255, 255, 255, 0.5) !important;
+    }
+    
+    /* شفافية قائمة اختيار الذكر */
+    .stSelectbox > div > div {
+        background-color: rgba(0, 0, 0, 0.4) !important;
+        color: white !important;
+        border: none !important;
     }
     </style>
     """, unsafe_allow_html=True)
@@ -76,27 +95,29 @@ st.markdown("""
 # العنوان
 st.markdown('<p class="title-font">📿 السبحة الإلكترونية</p>', unsafe_allow_html=True)
 
-# قائمة رفع صورة الخلفية (مخفية داخل قائمة قابلة للطي لترتيب الواجهة)
-with st.expander("🖼️ إعدادات الخلفية (اضغط لتغيير الصورة)"):
-    bg_img = st.file_uploader("ارفع صورة دينية من هاتفك لتكون خلفية للتطبيق:", type=['png', 'jpg', 'jpeg'])
-add_bg_from_upload(bg_img)
-
-# اختيار الذكر
-zikr_option = st.selectbox("اختر الذكر:", ["سبحان الله", "الحمد لله", "لا إله إلا الله", "الله أكبر", "أستغفر الله", "اللهم صل على محمد وآل محمد"])
+# قائمة اختيار الذكر شفافة
+zikr_option = st.selectbox("", ["سبحان الله", "الحمد لله", "لا إله إلا الله", "الله أكبر", "أستغفر الله", "اللهم صل على محمد وآل محمد"], label_visibility="collapsed")
 
 # عرض العداد بخط عملاق
 st.markdown(f'<div class="number-display">{st.session_state.tasbeeh_count}</div>', unsafe_allow_html=True)
 
-# الزر الكبير للتسبيح
-if st.button(f"اضغط هنا للتسبيح", key="main_btn"):
-    st.session_state.tasbeeh_count += 1
-    st.rerun()
+# صف الأزرار الأول: مساحة فارغة باليسار (1) والدگمة الجبيرة باليمين (3)
+col_left, col_right = st.columns([1, 3])
+with col_right:
+    if st.button("سبّح", key="main_btn"):
+        st.session_state.tasbeeh_count += 1
+        st.rerun()
 
-st.write("---")
+st.write("")
 
-# زر التصفير بحجم معقول في الأسفل
-col1, col2, col3 = st.columns([1, 2, 1])
-with col2:
-    if st.button("🔄 تصفير العداد", key="reset_btn"):
+# صف الأزرار الثاني: زر التصفير صغير على جهة اليسار حتى ما ينضغط بالغلط
+col_reset, col_empty = st.columns([1, 3])
+with col_reset:
+    if st.button("🔄 تصفير", key="reset_btn"):
         st.session_state.tasbeeh_count = 0
         st.rerun()
+
+# خيار رفع الصورة مخفي بأسفل الشاشة
+with st.expander("⚙️ إضافة خلفية"):
+    bg_img = st.file_uploader("اختر صورة من تلفونك:", type=['png', 'jpg', 'jpeg'])
+add_bg_from_upload(bg_img)
