@@ -44,11 +44,11 @@ st.markdown("""
         position: fixed !important;
         bottom: 50px !important;
         right: 20px !important;
-        width: 90px !important;  /* العرض قليل */
-        height: 400px !important; /* الطول كبير */
+        width: 90px !important;  
+        height: 400px !important; 
         font-size: 30px !important;
         font-weight: bold !important;
-        border-radius: 50px !important; /* حواف دائرية */
+        border-radius: 50px !important; 
         background: linear-gradient(135deg, #00c6ff, #0072ff) !important;
         color: white !important;
         border: 3px solid rgba(255,255,255,0.6) !important;
@@ -75,17 +75,20 @@ st.markdown("""
         z-index: 1000 !important;
     }
 
-    /* إصلاح قائمة اختيار الصورة (الخط أسود مقروء على خلفية فاتحة) */
+    /* تصغير مستطيل اختيار الصورة وتوسيطه حتى لا يتعارض مع الأزرار */
     div[data-testid="stExpander"] {
         background-color: rgba(255, 255, 255, 0.95) !important;
         border-radius: 15px !important;
         margin-top: 40px !important;
+        width: 220px !important; /* حجم المستطيل صار صغير وملموم */
+        margin-left: auto !important; /* توسيط */
+        margin-right: auto !important; /* توسيط */
         border: 1px solid #ccc !important;
         position: relative;
         z-index: 500;
     }
     div[data-testid="stExpander"] * { 
-        color: black !important; /* الخط باللون الأسود */
+        color: black !important; 
     }
     
     /* القائمة المنسدلة للأذكار */
@@ -114,9 +117,9 @@ if st.button("تصفير", type="secondary"):
     st.session_state.tasbeeh_count = 0
     st.rerun()
 
-# الإعدادات لرفع الصورة (الآن بخط أسود)
-with st.expander("⚙️ لتغيير الصورة الخلفية اضغط هنا"):
-    uploaded_file = st.file_uploader("اختر صورة من تلفونك:", type=['png', 'jpg', 'jpeg'])
+# الإعدادات لرفع الصورة بحجم صغير ومتوسط
+with st.expander("⚙️ لتغيير الصورة اضغط هنا"):
+    uploaded_file = st.file_uploader("اختر صورة:", type=['png', 'jpg', 'jpeg'])
     if uploaded_file is not None:
         st.session_state.bg_image = base64.b64encode(uploaded_file.getvalue()).decode()
         st.rerun()
