@@ -75,14 +75,14 @@ st.markdown("""
         z-index: 1000 !important;
     }
 
-    /* تصغير مستطيل اختيار الصورة وتوسيطه حتى لا يتعارض مع الأزرار */
+    /* نقل مستطيل اختيار الصورة لليسار وتصغيره */
     div[data-testid="stExpander"] {
         background-color: rgba(255, 255, 255, 0.95) !important;
-        border-radius: 15px !important;
+        border-radius: 12px !important;
         margin-top: 40px !important;
-        width: 220px !important; /* حجم المستطيل صار صغير وملموم */
-        margin-left: auto !important; /* توسيط */
-        margin-right: auto !important; /* توسيط */
+        width: 200px !important; /* حجم صغير */
+        margin-left: 10px !important; /* إجبار المستطيل على جهة اليسار */
+        margin-right: auto !important; 
         border: 1px solid #ccc !important;
         position: relative;
         z-index: 500;
@@ -117,8 +117,8 @@ if st.button("تصفير", type="secondary"):
     st.session_state.tasbeeh_count = 0
     st.rerun()
 
-# الإعدادات لرفع الصورة بحجم صغير ومتوسط
-with st.expander("⚙️ لتغيير الصورة اضغط هنا"):
+# الإعدادات لرفع الصورة (باليسار الآن)
+with st.expander("⚙️ تغيير الخلفية"):
     uploaded_file = st.file_uploader("اختر صورة:", type=['png', 'jpg', 'jpeg'])
     if uploaded_file is not None:
         st.session_state.bg_image = base64.b64encode(uploaded_file.getvalue()).decode()
